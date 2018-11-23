@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>OnLine Repository</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="style/style.css">    
+    </head>
+	<body>
+		
+
+		<div id="container"></div>
+		<div id="menu">
+				<button id="prev"> < </button>
+			<button id="table">TABLE</button>
+			<button id="sphere">SPHERE</button>
+			<button id="reset">.</button>
+			<button id="helix">HELIX</button>
+			<button id="grid">GRID</button>
+			<button id="next"> > </button>
+			<label>Demo <input type="checkbox" id='demo'/></label>
+			<label>Radom <input type="checkbox" id='random'/></label>
+		</div>
+
+		<div style="display: none">
+			<div id='slide1' class="slide">
+				<h1 class="slide-title">Test slide 1</h1>
+				<div class="slide-content">
+					You should not store your sensitive data application-side. Make sure you always request it from the server. Even if users manually navigate to a page they are not authorized to see, they will not get the relevant data from the server and your application will still be secure.
+				</div>
+			</div>
+		
+			<div id='slide2' class="slide">
+				<h1 class="slide-title">Test slide 2</h1>
+				<div class="slide-content">
+					<img src="image/image1.jpg"/>
+				</div>
+			</div>
+			<div id='slide3' class="slide">
+				<h1 class="slide-title">Test slide 3</h1>
+				<div class="slide-content">
+					<img src="image/image2.jpg"/>
+				</div>
+			</div>
+
+			<div id='slide4' class="slide">
+				<h1 class="slide-title">Test slide 4 </h1>
+				<div class="slide-content">
+					<img src="image/image3.jpg"/>
+				</div>
+			</div>
+
+			<div id='slide5' class="slide">
+				<h1 class="slide-title">Test slide 5</h1>
+				<div class="slide-content">
+					<iframe width="1000" height="500" src="https://www.youtube.com/embed/k4komyUIims" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+			</div>
+
+			<div id='slide6' class="slide">
+				<h1 class="slide-title">Test slide 6 </h1>
+				<div class="slide-content">
+						<video width="1000" controls  id="videoDemo">
+							<source src="image/video.mp4" type="video/mp4" controls preload="none">
+							Your browser does not support HTML5 video.
+							</video>
+				</div>
+			</div>
+		</div>
+		
+
+        <script src="vendor/three.js"></script>
+        <script src="vendor/tween.min.js"></script>
+        <script src="vendor/TrackballControls.js"></script>
+        <script src="vendor/CSS3DRenderer.js"></script>
+        <script src="slide/data.js"></script>
+        <script src="slide/slide.js"></script>
+	</body>
+</html>
