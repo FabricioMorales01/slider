@@ -8,9 +8,11 @@
     </head>
 	<body>
 		
-
-		<div id="container"></div>
-		<div id="menu">
+		<button class="btn-start">
+			START
+		</button>
+		<div id="container" style="display: none"></div>
+		<div id="menu" class="menu" style="display: none">
 				<button id="prev"> < </button>
 			<button id="table">TABLE</button>
 			<button id="sphere">SPHERE</button>
@@ -68,12 +70,14 @@
 			</div>
 		</div>
 		
-
+		<script src="vendor/jquery.min.js"></script>
         <script src="vendor/three.js"></script>
         <script src="vendor/tween.min.js"></script>
-        <script src="vendor/TrackballControls.js"></script>
+		<script src="vendor/TrackballControls.js"></script>
+		<script src="vendor/OrbitControls.js"></script>
         <script src="vendor/CSS3DRenderer.js"></script>
-        <script src="slide/data.js"></script>
+		<script src="slide/data.js"></script>
+		<script src="slide/control.js"></script>
         <script src="slide/slide.js"></script>
 	</body>
 </html>

@@ -1,25 +1,29 @@
 
 var camera, scene, renderer;
 var controls;
+var currentSlide = -1;
+
+var currntObject3d = [];
+
+renderer = new THREE.CSS3DRenderer();
 
 var objects = [];
 var targets = { table: [], sphere: [], helix: [], grid: [] };
 
-init();
-animate();
+
 
 function scale(value) {
     return value * 100 * nScale;
 }
 
 function init() {
-    
+
     camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 50000 );
-    camera.position.z =  scale(26);
+    camera.position.z =  scale(42);
+    camera.position.y =  scale(11);
 
     scene = new THREE.Scene();
-
-    var currentSlide = -1;
+    
 
     // table
 
@@ -55,6 +59,7 @@ function init() {
 
         //
         item.itemView = object;
+        object.item = item;
         element.item = item;
 
         element.addEventListener( 'click', function () {
@@ -68,7 +73,7 @@ function init() {
         var n = 10;
         object.position.x = ( (i % n )  * scale(1.4)) - scale(1.4*n / 2);
         object.position.y = - ( parseInt(i / n) * scale(1.8)  ) + scale(1.8*n/ 2) ;
-        object.position.z = 0;
+        object.position.z = scale(10);
         targets.table.push( object );
 
     }
@@ -100,12 +105,12 @@ function init() {
 
     for ( var i = 0, l = objects.length; i < l; i ++ ) {
 
-        var theta = i * 0.175 + Math.PI;
+        var theta = i * 0.2 + 1.80*Math.PI;
         var y = - ( i * scale(0.08) ) + scale(4,5);
 
         var object = new THREE.Object3D();
 
-        object.position.setFromCylindricalCoords( scale(9), theta, y );
+        object.position.setFromCylindricalCoords( scale(17), theta, y );
 
         vector.x = object.position.x * 2;
         vector.y = object.position.y;
@@ -125,7 +130,7 @@ function init() {
 
         object.position.x = ( ( i % 5 ) * scale(4) ) - scale(8);
         object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * scale(4) ) + scale(8);
-        object.position.z = ( Math.floor( i / 25 ) ) * scale(10) + scale(2);
+        object.position.z = ( Math.floor( i / 25 ) ) * scale(10) + scale(10);
 
         targets.grid.push( object );
 
@@ -133,17 +138,15 @@ function init() {
 
     //
 
-    renderer = new THREE.CSS3DRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.getElementById( 'container' ).appendChild( renderer.domElement );
 
     //
 
-     controls = new THREE.TrackballControls( camera, renderer.domElement );
-    //controls = new THREE.OrbitControls(camera);
+    // controls = new THREE.TrackballControls( camera, renderer.domElement );
+    controls = new THREE.OrbitControls(camera);
     controls.rotateSpeed = 0.5;
     controls.minDistance = scale(0);
-    controls.maxDistance = scale(60);
     controls.addEventListener( 'change', render );
 
     var chkRan = document.getElementById( 'random' );
@@ -190,19 +193,13 @@ function init() {
     }, false );
 
     var button = document.getElementById( 'prev' );
-    button.addEventListener( 'click', function () {
-        
-        currentSlide = currentSlide <= 0 ? table.length - 1 : currentSlide - 1;
-        moveCameraTo(table[currentSlide].itemView);
-
+    button.addEventListener( 'click', function(ev){
+        prev(ev);
     }, false );
 
     var buttonNext = document.getElementById( 'next' );
-    buttonNext.addEventListener( 'click', function () {
-
-        currentSlide = currentSlide >= table.length - 1 ? 0 : currentSlide + 1;
-        moveCameraTo(table[currentSlide].itemView);
-
+    buttonNext.addEventListener( 'click', function(ev){
+        next.apply(window);
     }, false );
 
     var button = document.getElementById( 'reset' );
@@ -214,124 +211,29 @@ function init() {
 
     var button = document.getElementById( 'demo' );
     var interval = 0;
-    button.addEventListener( 'change', function () {
-        currentSlide = 0;
-        controls.reset();
-        if(!this.checked) {
-            clearInterval(interval);
-            document.getElementById("videoDemo").stop();
-            return;
-        }
-        document.getElementById("videoDemo").play(); 
-        interval = setInterval(function(){
-            buttonNext.click();
-        }, 1800)
+    button.addEventListener( 'change', function(ev){
+        demo(ev);
     }, false );
 
     
-
-    transform( targets.helix, 2000 );
-
-    //
-    // add spotlight for the shadows
-    var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.set(-40, 60, -10);
-    spotLight.castShadow = true;
-    scene.add(spotLight);
-
+    render();
+   
     window.addEventListener( 'resize', onWindowResize, false );
 
 }
 
-function transform( targets, duration ) {
+$('.btn-start').on('click', function(){
+    $(this).hide();
+    $('#container, #menu').show();
+    init();
+    animate();
+    setTimeout(function(){
+        transform( targets.helix, 2000 );
+        setTimeout(function(){
+            next();
+        }, 4000);
+    }, 1000);
 
-    TWEEN.removeAll();
-
-    for ( var i = 0; i < objects.length; i ++ ) {
-
-        var object = objects[ i ];
-        var target = targets[ i ];
-
-        new TWEEN.Tween( object.position )
-            .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
-
-        new TWEEN.Tween( object.rotation )
-            .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
-            .easing( TWEEN.Easing.Exponential.InOut )
-            .start();
-
-    }
-
-    new TWEEN.Tween( this )
-        .to( {}, duration * 2 )
-        .onUpdate( render )
-        .start();
-
-}
-
-function moveCameraTo (object) {
-    var vector = object.position.clone();
     
+})
 
-    new TWEEN.Tween(camera.position.clone())
-            .to(vector.clone(), 600)
-            .easing(TWEEN.Easing.Linear.None)
-            .onUpdate(function () {
-            camera.position.set(this.x, this.y, this.z);
-            camera.lookAt(new THREE.Vector3(1000, 1000, 1000));
-        })
-            .onComplete(function () {
-                camera.lookAt(new THREE.Vector3(1000, 1000, 1000));
-                controls.reduceZoom(3)
-        })
-        .start();
-
-    var rotation = object.rotation.clone();
-    /*
-    new TWEEN.Tween(camera.position.clone())
-            .to(vector.clone(), 600)
-            .easing(TWEEN.Easing.Linear.None)
-            .onUpdate(function () {
-            camera.rotation.set(this._x, this._y, this._z);
-           
-        })
-            .onComplete(function () {
-    
-            controls.reduceZoom(1.5)
-        })
-        .start();*/
-}
-
-function onWindowResize() {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-    render();
-
-}
-
-function animate() {
-
-    requestAnimationFrame( animate );
-
-    TWEEN.update();
-
-    controls.update();
-
-}
-
-
-
-render();
-
-
-var step = 0;
-
-function render() {
-    renderer.render(scene, camera);
-}
